@@ -1,0 +1,5 @@
+Config,Key_Exchange_Group,Key_Exchange_Type,Server_Authentication,Authentication_Type,Classification
+K1,X25519,Classical,ECDSA P-256 / SHA-256,Classical,Classical baseline
+H1,X25519 + ML-KEM-768,Hybrid,ECDSA P-256 / SHA-256,Classical,Hybrid KEX / classical authentication
+H2,X25519 + ML-KEM-768,Hybrid,ML-DSA-65,Post-quantum,Hybrid KEX / post-quantum authentication
+P1,ML-KEM-768,Post-quantum,ML-DSA-65,Post-quantum,Post-quantum KEX and authentication

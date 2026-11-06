@@ -1,0 +1,9 @@
+Config,Resumption,N,Observed_Mean_ms,Bootstrap_Mean_95CI_Lower_ms,Bootstrap_Mean_95CI_Upper_ms,Bootstrap_Replicates,Method
+H1,OFF,5600,4.476284163035714,4.447769760696429,4.5095206114375,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+H1,ON,5600,3.1720513701785715,3.1595169896875004,3.184399364308036,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+H2,OFF,5600,8.056939403928572,7.989677118254464,8.126568116821426,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+H2,ON,5600,3.19467312,3.175370096254464,3.216745256602679,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+K1,OFF,5600,3.6798201132142863,3.65745783259375,3.7088955560669645,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+K1,ON,5600,2.632322977857143,2.618450052986607,2.645987738674107,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+P1,OFF,5600,7.342511130714285,7.276598886392856,7.409769980138393,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI
+P1,ON,5600,2.7212827380357143,2.693666102580357,2.7504472218928573,2000,Connection-level percentile bootstrap within this single sequential run; not between-run CI

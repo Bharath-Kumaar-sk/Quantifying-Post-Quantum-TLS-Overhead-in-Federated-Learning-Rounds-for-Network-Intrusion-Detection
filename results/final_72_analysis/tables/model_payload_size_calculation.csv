@@ -1,0 +1,2 @@
+Model_Architecture,State_Tensor_Bytes,State_Tensor_KiB,Caveat
+"Linear(87,64) + BatchNorm1d(64) + Linear(64,32) + Linear(32,5)",32540,31.77734375,Tensor payload only; excludes serialization/protocol framing and transfer multiplicity

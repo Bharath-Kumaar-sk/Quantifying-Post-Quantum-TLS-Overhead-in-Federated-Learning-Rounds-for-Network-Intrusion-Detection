@@ -1,0 +1,5 @@
+Config,Expected_Group,Observed_Group_Values,Full_Handshakes_Checked,Group_Match,Expected_CertificateVerify,Observed_Signature_Values,Signature_Match,TLS_Versions,Cipher_Suites_All_Connections,Algorithm_Audit
+K1,X25519,29,5705,True,ECDSA P-256 / SHA-256,0x0403,True,TLSv1.3,TLS_AES_256_GCM_SHA384,PASS
+H1,X25519 + ML-KEM-768,4588,5705,True,ECDSA P-256 / SHA-256,0x0403,True,TLSv1.3,TLS_AES_256_GCM_SHA384,PASS
+H2,X25519 + ML-KEM-768,4588,5705,True,ML-DSA-65,0x0905,True,TLSv1.3,TLS_AES_256_GCM_SHA384,PASS
+P1,ML-KEM-768,513,5705,True,ML-DSA-65,0x0905,True,TLSv1.3,TLS_AES_256_GCM_SHA384,PASS
