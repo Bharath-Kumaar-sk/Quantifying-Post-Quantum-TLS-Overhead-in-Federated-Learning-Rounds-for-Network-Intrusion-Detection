@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-"""Independent TLS 72-grid benchmark collector.
-
-This benchmark is deliberately separate from Flower.  It opens N x R sequential,
-fresh TCP/TLS connections per condition and measures TCP connect and TLS handshake
-time inside one persistent Python process. tcpdump captures each condition using
-immediate-mode packet delivery and packet-buffered file writes; TShark performs
-offline PCAP analysis. Neither is launched per handshake. Client source ports are
-unique within each condition for unambiguous stream correlation.
-
-TLS 1.3 key-exchange groups and server-certificate signature algorithms are
-explicitly configured through Python 3.15's SSLContext.set_groups() and
-SSLContext.set_server_sigalgs(). The negotiated profile is then independently
-validated from the packet capture by TShark.
-"""
 from __future__ import annotations
 
 import argparse
@@ -161,9 +146,6 @@ def make_context(profile: TLSProfile, keylog_path: Path) -> ssl.SSLContext:
     ctx.check_hostname = True
     ctx.load_verify_locations(cafile=profile.ca_file)
 
-    # Explicitly constrain ClientHello to this benchmark profile.
-    # Without set_groups(), OpenSSL can omit the pure MLKEM768 key share;
-    # the P1 server then reports final_key_share:no suitable key share.
     try:
         available_groups = {group.lower() for group in ctx.get_groups()}
         if profile.expected_group.lower() not in available_groups:
@@ -185,9 +167,7 @@ def make_context(profile: TLSProfile, keylog_path: Path) -> ssl.SSLContext:
     keylog_path.touch(mode=0o600, exist_ok=True)
     os.chmod(keylog_path, 0o600)
     ctx.keylog_filename = str(keylog_path)
-    # Key logs allow TShark to decrypt TLS 1.3 post-ServerHello handshake messages,
-    # including CertificateVerify. The key log is deleted after PCAP analysis.
-    # Do not set OP_NO_TICKET: TLS 1.3 tickets are required for the ON experiment.
+
     return ctx
 
 
@@ -216,7 +196,6 @@ def ensure_capture_buffer_limit() -> int:
         sudo = shutil.which("sudo")
         if not sudo:
             raise BenchmarkError("sudo is required to raise net.core.rmem_max.")
-        # sudo -v is deliberately before the grid, not inside measured intervals.
         subprocess.run([sudo, "-v"], check=True)
         command = [sudo, "-n", *command]
 
@@ -323,9 +302,7 @@ def start_capture(tcpdump: str, interface: str, pcap_path: Path,
         "-U",
         "-w", str(pcap_path),
     ]
-    # Important: do NOT detach sudo into a new session. With tty-scoped sudo
-    # timestamps, a new session can lose the credential validated by `sudo -v`
-    # on the caller's terminal and fail with "sudo: a password is required".
+
     # Keep the capture process in the caller's session; stop_capture sends SIGINT
     # directly to the sudo process, which forwards it to tcpdump.
     proc = subprocess.Popen(
@@ -368,8 +345,6 @@ def capture_log_summary(log_path: Path) -> dict[str, Any]:
         r"(?im)^\s*(\d+)\s+packets?\s+received\s+by\s+filter\b", text
     )
 
-    # tcpdump/libpcap builds vary slightly in wording. Accept the documented
-    # kernel/interface forms and the generic form, but never infer zero when absent.
     drop_values = re.findall(
         r"(?im)^\s*(\d+)\s+packets?\s+dropped(?:\s+by\s+(?:kernel|interface))?\s*$",
         text,
